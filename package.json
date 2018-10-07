@@ -1,0 +1,26 @@
+{
+  "name": "forumbackend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.3.1",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0"
+  },
+  "scripts": {
+    "start": "nodemon --exec babel-node index.js"
+  }
+}
