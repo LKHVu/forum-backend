@@ -1,16 +1,27 @@
 import {User} from '../models'
 import {createJWT, getPwHash} from '../helpers'
+import {Auth} from '../services'
 
 exports.create = async (req, res) => {
-    const hashedPw = getPwHash(req.body.password)
+    const {password, email, name} = req.body
+    const hashedPw = getPwHash(password)
+
+    if (await Auth.isExisted(name)){ // why is this a promise ???
+        return res.status(500).send({message: "Username existed"})
+    }
+    if (await Auth.isExisted(email)){
+        return res.status(500).send({message: "Email existed"})
+    }
+
     const user = new User({
-        name: req.body.name,
-        email: req.body.email,
+        name,
+        email,
         password: hashedPw
     })
+
     try {
         let newUser = await user.save()
-        const token = createJWT(user)
+        const token = createJWT(newUser)
         res.status(201).json({message: 'User Created', token})
     } catch(err) {
         res.status(500).send(err)
@@ -59,11 +70,11 @@ exports.getAll = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const user = await User.deleteOne({_id: req.params.id})
+        const user = await User.deleteOne({name: req.params.name})
         res.status(200).json(user)
     } catch(err) {
         console.log(err)
         res.status(500).send(err)
     }
-
 }
+

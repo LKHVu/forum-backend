@@ -1,7 +1,11 @@
-import Mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
-const UserSchema = new Mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     userID: String,
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
     name: { 
         type: String, 
         unique: true,
@@ -18,11 +22,11 @@ const UserSchema = new Mongoose.Schema({
         required: true,
     },
     friends: [{
-        type: Mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
     conversations: [{
-        type: Mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Conversation'
     }],
     createdAt: Date,
@@ -38,4 +42,4 @@ UserSchema.pre('save', function(next) {
     next();
   });  
 
-module.exports = Mongoose.model('User', UserSchema)
+module.exports = mongoose.model('User', UserSchema)

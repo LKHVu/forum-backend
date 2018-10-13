@@ -1,1 +1,5 @@
-import cors from 'cors'
+import Auth from './auth'
+
+module.exports = {
+    Auth,
+}

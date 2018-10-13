@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Comment from './comment'
 
 const Schema = mongoose.Schema
 
@@ -9,7 +8,7 @@ const ThreadSchema = new mongoose.Schema({
   createdAt:  Date,
   updatedAt:  Date,
   category:   { type: String, required: true },
-  comments:   [Comment.schema],
+  comments:   [{type: Schema.Types.ObjectId, ref: 'Comment'}],
   author:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
   upVotes:    [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
   downVotes:  [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],

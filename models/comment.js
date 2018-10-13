@@ -4,12 +4,12 @@ const Schema = mongoose.Schema
 
 var CommentSchema = new mongoose.Schema({
   content:    { type: String, required: true },
-  createdAt:  { type: Date },
-  updatedAt:  { type: Date },
+  createdAt:  Date,
+  updatedAt:  Date,
   comments:   [ {type: Schema.Types.ObjectId, ref: 'Comment', required: false}], 
   author:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
   authorName: { type: String, required: false },
-  postId:     { type: Schema.Types.ObjectId, ref: 'Thread', required: true },
+  threadId:     { type: Schema.Types.ObjectId, ref: 'Thread', required: true },
 });
 
 CommentSchema.pre('save', function(next) {

@@ -7,11 +7,9 @@ userRouter.get('/', User.getAll)
 
 userRouter.get('/:name', User.getByName)
 
-userRouter.get('/:id', User.getOne)
-
 userRouter.post('/', User.create)
 
-userRouter.delete('/:id', User.delete)
+userRouter.delete('/:name', User.delete)
 
 // userRouter.put('/:name')
 
