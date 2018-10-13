@@ -4,7 +4,6 @@ import passport from 'passport'
 import {ExtractJwt, Strategy} from 'passport-jwt'
 import bodyParser from 'body-parser'
 import API from './routes'
-import mongoose from 'mongoose'
 import {database, jsonwt} from './config'
 import socketIo from 'socket.io'
 import http from 'http'
@@ -26,11 +25,6 @@ const jwtStrategy = new Strategy(jwtOptions, (jwt_payload, next) => {
     }
 })
 
-mongoose.connect(database, { 
-    useNewUrlParser: true, 
-    useCreateIndex: true,
-})
-
 passport.use(jwtStrategy)
 
 app.use(cors())
@@ -45,8 +39,9 @@ const server = http.createServer(app)
 const io = socketIo(server)
 
 io.on('connection', socket => {
-    console.log('New client connected')
+    console.log('New client connected to global')
     socket.on('disconnect', () => console.log('Client disconnected'))
 })
+
 
 server.listen(8000, () => console.log('Server is running'))
