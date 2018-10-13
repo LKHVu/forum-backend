@@ -15,7 +15,7 @@ module.exports = {
         app: process.env.APP || 'dev',
     },
     jsonwt: {
-        secret: 'MyNameJeff',
+        secretOrKey: 'MyNameJeff',
         expiresIn: '1d',
         issuer: 'Web Forum'
     },

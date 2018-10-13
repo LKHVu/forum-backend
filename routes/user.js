@@ -1,16 +1,16 @@
 import {Router} from 'express'
 import {User} from '../controllers'
 
-const userRouter = Router()
+const router = Router()
 
-userRouter.get('/', User.getAll)
+router.get('/', User.getAll)
 
-userRouter.get('/:name', User.getByName)
+router.get('/:name', User.getByName)
 
-userRouter.post('/', User.create)
+router.post('/', User.create)
 
-userRouter.delete('/:name', User.delete)
+router.delete('/:name', User.delete)
 
 // userRouter.put('/:name')
 
-export default userRouter
+export default router

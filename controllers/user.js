@@ -1,15 +1,14 @@
 import {User} from '../models'
 import {createJWT, getPwHash} from '../helpers'
-import {Auth} from '../services'
 
 exports.create = async (req, res) => {
     const {password, email, name} = req.body
     const hashedPw = getPwHash(password)
 
-    if (await Auth.isExisted(name)){ // why is this a promise ???
+    if (await isExisted(name)){ // why is this a promise ???
         return res.status(500).send({message: "Username existed"})
     }
-    if (await Auth.isExisted(email)){
+    if (await isExisted(email)){
         return res.status(500).send({message: "Email existed"})
     }
 
@@ -22,9 +21,9 @@ exports.create = async (req, res) => {
     try {
         let newUser = await user.save()
         const token = createJWT(newUser)
-        res.status(201).json({message: 'User Created', token})
+        return res.status(201).json({message: 'User Created', token})
     } catch(err) {
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
 
@@ -33,13 +32,13 @@ exports.getByName = async (req, res) => {
     try {
         const user = await User.findOne({name: req.params.name})
         if (!user){
-            res.status(500).json({"Error": "User not found"})
+            return res.status(500).json({"Error": "User not found"})
         } else {
-        res.status(200).json(user)
+        return res.status(200).json(user)
         }
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
 
@@ -48,9 +47,9 @@ exports.getOne = async (req, res) => {
     try {
         const user = await User.findOne({_id: req.params.id})
         if (!user){
-            res.status(500).json({"Error": "User not found"})
+            return res.status(500).json({"Error": "User not found"})
         } else {
-        res.status(200).json(user)
+        return res.status(200).json(user)
         }
     } catch(err) {
         console.log(err)
@@ -59,22 +58,44 @@ exports.getOne = async (req, res) => {
 }
 
 exports.getAll = async (req, res) => {
+    console.log(req.user)
     try {
         const users = await User.find()
-        res.status(200).json(users)
+        return res.status(200).json(users)
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
 
 exports.delete = async (req, res) => {
     try {
         const user = await User.deleteOne({name: req.params.name})
-        res.status(200).json(user)
+        return res.status(200).json(user)
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        return res.status(500).send(err)
     }
 }
+
+async function isExisted(uniqueKey){
+    let user
+    try {
+        if (validator.isEmail(uniqueKey)){
+            user = await User.findOne({email: uniqueKey})
+        } else {
+            user = await User.findOne({name: uniqueKey})
+        }
+    } catch(err) {
+        console.log(err)
+    }
+    if (!user){
+        console.log("User not found")
+        return false
+    } else {
+        console.log("User found")
+        return true
+    }
+}
+
 
