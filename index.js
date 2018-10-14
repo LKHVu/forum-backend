@@ -7,8 +7,10 @@ import logger from 'morgan'
 import cors from 'cors'
 import passport from 'passport'
 import API from './routes'
+import {addStrategy} from './helpers'
 
 const app = express()
+addStrategy(passport)
 
 app.use(passport.initialize())
 app.use(cors())

@@ -10,9 +10,10 @@ const ThreadSchema = new mongoose.Schema({
   category:   { type: String, required: true },
   comments:   [{type: Schema.Types.ObjectId, ref: 'Comment'}],
   author:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  upVotes:    [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
-  downVotes:  [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
-  voteTotal:  { type: Number, default: 0 }
+  upvotes:    [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+  downvotes:  [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+  score:  { type: Number, default: 0 },
+  bikeType:   String
 });
 
 ThreadSchema.pre('save', function(next) {

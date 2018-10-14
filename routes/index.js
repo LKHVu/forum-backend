@@ -1,24 +1,13 @@
 import {Router} from 'express'
 import User from './user'
+import Thread from './thread'
 import {Auth} from '../controllers'
-import passport from 'passport'
-// import {addStrategy} from '../helpers'
-import {ExtractJwt, Strategy} from 'passport-jwt'
-import {jsonwt} from '../config'
-
-const opts = {}
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('JWT')
-opts.secretOrKey = jsonwt.secretOrKey
-const JWTStrategy = new Strategy(opts, function(jwtPayload, next){
-    next(null, true)
-})
-passport.use(JWTStrategy)
-
-// addStrategy(passport)
+import {requireLogin, requireAdmin} from '../helpers'
 
 const API = Router()
 
-API.use('/user', passport.authenticate('jwt',{session: false}), User)
+API.use('/user', requireLogin, requireAdmin, User)
+API.use('/thread', Thread)
 
 API.post('/signin', Auth.signin)
 API.post('/signup', Auth.signup)
