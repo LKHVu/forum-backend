@@ -7,8 +7,7 @@ const SubforumSchema = new mongoose.Schema({
   description:    { type: String, required: true },
   createdAt:  Date,
   updatedAt:  Date,
-  newestComment:   {type: Schema.Types.ObjectId, ref: 'Comment'},
-  newestThread:    {type: Schema.Types.ObjectId, ref: 'Thread'},
+  threads: [{type: Schema.Types.ObjectId, ref: 'Thread'}] 
 });
 
 SubforumSchema.pre('save', function(next) {

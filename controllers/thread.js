@@ -37,6 +37,10 @@ exports.create = async (req, res) => {
         return res.status(500).json({"error": "Please select a subforum"})
     }
     try {   
+        const currentSubforum = await Subforum.findById(subforum)
+        if (!currentSubforum){
+            return res.json(500).json({"error" : "Subforum not found"})
+        }
         const newThread = new Thread({
             author,
             title,
@@ -45,6 +49,8 @@ exports.create = async (req, res) => {
             tags
         })
         const savedThread = await newThread.save()
+        currentSubforum.threads.push(savedThread)
+        currentSubforum.save()
         res.status(200).json(savedThread)
     } catch(err) {
         console.log(err)
@@ -53,11 +59,10 @@ exports.create = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    const {id} = req.params
-    const {author} = req.user._id
-    // const author = req.user._id 
+    const _id = req.params.id
+    const author = req.user._id
     try {
-        const thread = await Thread.findOneAndDelete({_id: id, author})
+        const thread = await Thread.findOneAndDelete({_id, author})
         if (!thread){
             return res.status(200).json({"error": "Could not delete thread"})
         }

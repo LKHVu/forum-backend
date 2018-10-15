@@ -1,7 +1,5 @@
 import {User} from '../models'
 import {createJWT, getPwHash} from '../helpers'
-import jsonwebtoken from 'jsonwebtoken'
-import passportJwt from 'passport-jwt'
 
 exports.signin = async (req, res) => {
     const {name, password} = req.body

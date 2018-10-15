@@ -46,10 +46,10 @@ exports.create = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-    const {id} = req.params
+    const _id = req.params.id
     const author = req.user._id 
     try {
-        const comment = await Comment.findOneAndDelete({_id: id, author})
+        const comment = await Comment.findOneAndDelete({_id, author})
         if (!comment){
             return res.status(200).json({"error": "Could not delete comment"})
         }

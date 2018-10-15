@@ -1,49 +1,35 @@
 import {Subforum} from '../models'
-import {createJWT, getPwHash} from '../helpers'
 
 exports.create = async (req, res) => {
     const {title, description} = req.body
     if (await isExisted(title)){ // why is this a promise ???
         return res.status(500).send({"error": "Subforum existed"})
     }
+    if (!title || !description){
+        return res.status(500).send({"error": "Title or description is empty"})
+    }
 
-    const newUser = new User({
+    const newSubforum = new Subforum({
         title,
         description
     })
 
     try {
-        let savedUser = await newUser.save()
-        const token = createJWT(savedUser)
-        res.status(201).json({"success": 'User Created', token})
+        const savedSubforum = await newSubforum.save()
+        res.status(200).json({"success": 'Subforum Created', savedSubforum})
     } catch(err) {
-        res.status(500).json({"error": "An error occured", err})
-    }
-}
-
-exports.getByName = async (req, res) => {
-    console.log(req.params.name)
-    try {
-        const user = await User.findOne({name: req.params.name})
-        if (!user){
-            res.status(500).json({"error": "User not found"})
-        } else {
-            res.status(200).json(user)
-        }
-    } catch(err) {
-        console.log(err)
         res.status(500).json({"error": "An error occured", err})
     }
 }
 
 exports.getOne = async (req, res) => {
-    console.log(req.params.id)
+    const {id} = req.params
     try {
-        const user = await User.findOne({_id: req.params.id})
-        if (!user){
-            res.status(500).json({"error": "User not found"})
+        const subforum = await Subforum.findById(id)
+        if (!subforum){
+            res.status(500).json({"error": "Subforum not found"})
         } else {
-            res.status(200).json(user)
+            res.status(200).json(subforum)
         }
     } catch(err) {
         console.log(err)
@@ -52,10 +38,9 @@ exports.getOne = async (req, res) => {
 }
 
 exports.getAll = async (req, res) => {
-    console.log(req.user)
     try {
-        const users = await User.find()
-        res.status(200).json(users)
+        const subforums = await Subforum.find({})
+        res.status(200).json(subforums)
     } catch(err) {
         console.log(err)
         res.status(500).json({"error": "An error occured", err})
@@ -63,8 +48,9 @@ exports.getAll = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
+    const {id} = req.params
     try {
-        const subforum = await Subforum.deleteOne({name: req.params.name})
+        const subforum = await Subforum.findByIdAndDelete(id)
         res.status(200).json(subforum)
     } catch(err) {
         console.log(err)
