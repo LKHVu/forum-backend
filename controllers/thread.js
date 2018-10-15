@@ -1,15 +1,19 @@
-import {Thread} from '../models'
+import {Thread, Subforum} from '../models'
 
 exports.getOne = async (req, res) => {
-    const {id} = req.params
+    const {id} = req.params 
     try {
-        const query = [{'path': 'author', 'select': ['name', 'email']}, {'path': 'comments'}]
+        const query = [{'path': 'author', 'select': ['name', 'avatar', 'id']}, {'path': 'comments'}]
         const thread = await Thread.findById(id)
-            // .populate(query)
+            .populate(query)
+        console.log(thread._id)
+        thread.views++
+        thread.save()
+
         res.status(200).json(thread)
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -21,26 +25,30 @@ exports.getAll = async (req, res) => {
         res.status(200).json(threads)
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
 exports.create = async (req, res) => {
     const author = req.user._id
-    const {title, category, content, bikeType} = req.body
+
+    const {title, subforum, content, tags} = req.body
+    if (!subforum){
+        return res.status(500).json({"error": "Please select a subforum"})
+    }
     try {   
         const newThread = new Thread({
             author,
             title,
-            category,
+            subforum,
             content,
-            bikeType
+            tags
         })
         const savedThread = await newThread.save()
         res.status(200).json(savedThread)
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -57,7 +65,7 @@ exports.delete = async (req, res) => {
         res.status(200).json({"success": "Thread deleted"})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -74,7 +82,7 @@ exports.upvote = async (req, res) => {
         res.status(200).json({"success": "You up-voted", score: savedThread.score})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -90,7 +98,7 @@ exports.downvote = async (req, res) => {
         res.status(200).json({"success": "You down-voted", score: savedThread.score})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -106,6 +114,26 @@ exports.unvote = async (req, res) => {
         res.status(200).json({"success": "You unvoted", score: savedThread.score})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
+    }
+}
+
+exports.getNewestCreated = async (req, res) => {
+    try {
+        const thread = await Thread.findOne({}, {}, {sort: {createdAt: -1}}).populate('comments')
+        res.status(200).json(thread)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occured", err})
+    }
+}
+
+exports.getNewestUpdated = async (req, res) => {
+    try {
+        const thread = await Thread.findOne({}, {}, {sort: {updatedAt: -1}}).populate('comments')
+        res.status(200).json(thread)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }

@@ -11,7 +11,9 @@ var CommentSchema = new mongoose.Schema({
   thread:     { type: Schema.Types.ObjectId, ref: 'Thread', required: true },
   upvotes:    [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   downvotes:  [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
-  score:  { type: Number, default: 0 },
+  score:  {type: Number, default: 0 },
+  subforum: {type: Schema.Types.ObjectId, ref: 'Subforum', required: true},
+  reported: {type: Boolean, default: false}
 });
 
 CommentSchema.pre('save', function(next) {

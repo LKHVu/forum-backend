@@ -8,6 +8,7 @@ opts.secretOrKey = jsonwt.secretOrKey
 const JWTStrategy = new Strategy(opts, async function(jwtPayload, next){
     try {
         const user = await User.findById(jwtPayload._id)
+        console.log(jwtPayload)
         if (user){
             next(null, user)
         } else {

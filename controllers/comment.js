@@ -7,7 +7,7 @@ exports.getOne = async (req, res) => {
         res.status(200).json(comment)
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -17,7 +17,7 @@ exports.getAll = async (req, res) => {
         res.status(200).json(comments)
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -41,7 +41,7 @@ exports.create = async (req, res) => {
         res.status(200).json({"success": "You posted a comment", savedComment})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -57,7 +57,7 @@ exports.delete = async (req, res) => {
         res.status(200).json({"success": "Comment deleted"})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -73,7 +73,7 @@ exports.upvote = async (req, res) => {
         res.status(200).json({"success": "You up-voted", score: savedComment.score})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -89,7 +89,7 @@ exports.downvote = async (req, res) => {
         res.status(200).json({"success": "You down-voted", score: savedComment.score})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -105,6 +105,6 @@ exports.unvote = async (req, res) => {
         res.status(200).json({"success": "You unvoted", score: savedComment.score})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }

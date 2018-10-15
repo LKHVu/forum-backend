@@ -1,27 +1,21 @@
-import {User} from '../models'
+import {Subforum} from '../models'
 import {createJWT, getPwHash} from '../helpers'
 
 exports.create = async (req, res) => {
-    const {password, email, name} = req.body
-    const hashedPw = getPwHash(password)
-
-    if (await isExisted(name)){ // why is this a promise ???
-        return res.status(500).json({"error": "Username existed"})
-    }
-    if (await isExisted(email)){
-        return res.status(500).json({"error": "Email existed"})
+    const {title, description} = req.body
+    if (await isExisted(title)){ // why is this a promise ???
+        return res.status(500).send({"error": "Subforum existed"})
     }
 
     const newUser = new User({
-        name,
-        email,
-        password: hashedPw
+        title,
+        description
     })
 
     try {
         let savedUser = await newUser.save()
         const token = createJWT(savedUser)
-        res.status(201).json({"error": 'User Created', token})
+        res.status(201).json({"success": 'User Created', token})
     } catch(err) {
         res.status(500).json({"error": "An error occured", err})
     }
@@ -70,32 +64,24 @@ exports.getAll = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const user = await User.deleteOne({name: req.params.name})
-        res.status(200).json(user)
+        const subforum = await Subforum.deleteOne({name: req.params.name})
+        res.status(200).json(subforum)
     } catch(err) {
         console.log(err)
         res.status(500).json({"error": "An error occured", err})
     }
 }
 
-async function isExisted(uniqueKey){
-    let user
+async function isExisted(title){
     try {
-        if (validator.isEmail(uniqueKey)){
-            user = await User.findOne({email: uniqueKey})
+        subforum = await Subforum.findOne({title})
+        if (!subforum){
+            return false
         } else {
-            user = await User.findOne({name: uniqueKey})
-        }
+            return true
+        }    
     } catch(err) {
         console.log(err)
-    }
-    if (!user){
-        console.log("User not found")
         return false
-    } else {
-        console.log("User found")
-        return true
     }
 }
-
-

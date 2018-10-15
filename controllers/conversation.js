@@ -17,7 +17,7 @@ exports.checkExistence = async(req, res) => {
 
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
         res.status(200).json({ id: savedConversation._id, partnerId: partner._id})
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -51,7 +51,7 @@ exports.loadMessages = async (req, res) => {
         }
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -67,7 +67,7 @@ exports.createMessage = async (message) => {
     conversation.save()
     } catch(err) {
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 

@@ -7,13 +7,15 @@ const ThreadSchema = new mongoose.Schema({
   content:    { type: String, required: true },
   createdAt:  Date,
   updatedAt:  Date,
-  category:   { type: String, required: true },
   comments:   [{type: Schema.Types.ObjectId, ref: 'Comment'}],
   author:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
   upvotes:    [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   downvotes:  [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   score:  { type: Number, default: 0 },
-  bikeType:   String
+  tags:   [String],
+  subforum: { type: Schema.Types.ObjectId, ref: 'Subforum', required: true},
+  views: {type: Number, default: 0},
+  reported: {type: Boolean, default: false}
 });
 
 ThreadSchema.pre('save', function(next) {

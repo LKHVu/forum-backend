@@ -18,6 +18,9 @@ router.put('/:id/unvote', requireLogin, Thread.unvote)
 
 router.delete('/:id', requireLogin, Thread.delete)
 
+router.get('/newest/updated', Thread.getNewestUpdated)
+
+router.get('/newest/created', Thread.getNewestCreated)
 // // userRouter.put('/:name')
 
 export default router

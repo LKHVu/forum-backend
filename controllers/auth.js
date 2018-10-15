@@ -8,18 +8,18 @@ exports.signin = async (req, res) => {
     try {
         const user = await User.findOne({name})
         if (!user){
-            return res.status(500).json({error: "User not found"})
+            return res.status(500).json({"error": "User not found"})
         }
         if (password !== user.password){
-            return res.status(500).json({error: "Incorrect password"})
+            return res.status(500).json({"error": "Incorrect password"})
         }
         const data = user._doc
         const token = createJWT(data)
-        return res.status(200).json({success: "Login successfuly", token: "JWT " + token, data})
+        return res.status(200).json({"success": "Login successfuly", token: "JWT " + token, data})
 
     } catch(err){
         console.log(err)
-        res.status(500).send(err)
+        res.status(500).json({"error": "An error occured", err})
     }
 }
 
@@ -28,10 +28,10 @@ exports.signup = async (req, res) => {
     const hashedPw = getPwHash(password)
 
     if (await isExisted(name)){ // why is this a promise ???
-        return res.status(500).send({"Error": "Username existed"})
+        return res.status(500).send({"error": "Username existed"})
     }
     if (await isExisted(email)){
-        return res.status(500).send({"Error": "Email existed"})
+        return res.status(500).send({"error": "Email existed"})
     }
 
     const user = new User({
@@ -44,8 +44,8 @@ exports.signup = async (req, res) => {
         let newUser = await user.save()
         const data = newUser._doc
         const token = createJWT(data)
-        return res.status(201).json({success: 'User Created', token, data})
+        return res.status(201).json({"success": 'User Created', token, data})
     } catch(err) {
-        return res.status(500).send(err)
+        return res.status(500).json({"error": "An error occured", err})
     }
 }
