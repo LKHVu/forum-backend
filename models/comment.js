@@ -6,10 +6,12 @@ var CommentSchema = new mongoose.Schema({
   content:    { type: String, required: true },
   createdAt:  Date,
   updatedAt:  Date,
-  comments:   [ {type: Schema.Types.ObjectId, ref: 'Comment', required: false}], 
+  // comments:   [ {type: Schema.Types.ObjectId, ref: 'Comment', required: false}], 
   author:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  authorName: { type: String, required: false },
-  threadId:     { type: Schema.Types.ObjectId, ref: 'Thread', required: true },
+  thread:     { type: Schema.Types.ObjectId, ref: 'Thread', required: true },
+  upvotes:    [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+  downvotes:  [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+  score:  { type: Number, default: 0 },
 });
 
 CommentSchema.pre('save', function(next) {

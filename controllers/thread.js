@@ -3,7 +3,9 @@ import {Thread} from '../models'
 exports.getOne = async (req, res) => {
     const {id} = req.params
     try {
-        const thread = await Thread.findById(id).populate('author', ['name', 'email'])
+        const query = [{'path': 'author', 'select': ['name', 'email']}, {'path': 'comments'}]
+        const thread = await Thread.findById(id)
+            // .populate(query)
         res.status(200).json(thread)
     } catch(err) {
         console.log(err)
@@ -13,7 +15,9 @@ exports.getOne = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        const threads = await Thread.find({}).populate('author', ['name', 'email'])
+        const query = [{'path': 'author', 'select': ['name', 'email']}, {'path': 'comments'}]
+        const threads = await Thread.find({})
+            // .populate(query)
         res.status(200).json(threads)
     } catch(err) {
         console.log(err)
