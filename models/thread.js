@@ -12,10 +12,13 @@ const ThreadSchema = new mongoose.Schema({
   upvotes:    [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   downvotes:  [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   score:  { type: Number, default: 0 },
-  tags:   [String],
+  model:   {type: String, required: true},
   subforum: { type: Schema.Types.ObjectId, ref: 'Subforum', required: true},
   views: {type: Number, default: 0},
-  reported: {type: Boolean, default: false}
+  reported: {type: Boolean, default: false},
+  model: [String],
+  type: [String],
+  problem: [String],
 });
 
 ThreadSchema.pre('save', function(next) {
