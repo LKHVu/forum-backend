@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate'
 
 const Schema = mongoose.Schema
 
@@ -20,6 +21,8 @@ const ThreadSchema = new mongoose.Schema({
   type: String,
   problem: String,
 });
+
+ThreadSchema.plugin(mongoosePaginate)
 
 ThreadSchema.pre('save', function(next) {
   const date = new Date();

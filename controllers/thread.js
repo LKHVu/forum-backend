@@ -127,7 +127,7 @@ exports.unvote = async (req, res) => {
 
 exports.getNewestCreated = async (req, res) => {
     try {
-        const thread = await Thread.findOne({}, {}, {sort: {createdAt: -1}}).populate('comments')
+        const thread = await Thread.findOne({}, {}, {sort: {createdAt: -1}}).populate('comments').lean()
         res.status(200).json(thread)
     } catch(err) {
         console.log(err)
@@ -137,10 +137,86 @@ exports.getNewestCreated = async (req, res) => {
 
 exports.getNewestUpdated = async (req, res) => {
     try {
-        const thread = await Thread.findOne({}, {}, {sort: {updatedAt: -1}}).populate('comments')
+        const thread = await Thread.findOne({}, {}, {sort: {updatedAt: -1}}).populate('comments').lean()
         res.status(200).json(thread)
     } catch(err) {
         console.log(err)
         res.status(500).json({"error": "An error occured", err})
+    }
+}
+
+exports.getNewest = async (req, res) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {date: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
+    }
+}
+
+exports.getPopular = async (req, res) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {date: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
+    }
+}
+
+exports.getHighestRated = async (req, res) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {date: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
+    }
+}
+
+exports.getOwnedThreads = async (req, res) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {date: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
     }
 }
