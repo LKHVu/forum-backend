@@ -16,9 +16,9 @@ const ThreadSchema = new mongoose.Schema({
   subforum: { type: Schema.Types.ObjectId, ref: 'Subforum', required: true},
   views: {type: Number, default: 0},
   reported: {type: Boolean, default: false},
-  model: [String],
-  type: [String],
-  problem: [String],
+  model: String,
+  type: String,
+  problem: String,
 });
 
 ThreadSchema.pre('save', function(next) {

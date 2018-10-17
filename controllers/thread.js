@@ -32,7 +32,7 @@ exports.getAll = async (req, res) => {
 exports.create = async (req, res) => {
     const author = req.user._id
 
-    const {title, subforum, content, tags} = req.body
+    const {title, subforum, content, tags, model, type, problem} = req.body
     if (!subforum){
         return res.status(500).json({"error": "Please select a subforum"})
     }
@@ -46,7 +46,9 @@ exports.create = async (req, res) => {
             title,
             subforum,
             content,
-            tags
+            model,
+            type,
+            problem
         })
         const savedThread = await newThread.save()
         currentSubforum.threads.push(savedThread)

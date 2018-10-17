@@ -8,6 +8,7 @@ import cors from 'cors'
 import passport from 'passport'
 import API from './routes'
 import {addStrategy} from './helpers'
+import multer from 'multer'
 
 const app = express()
 addStrategy(passport)
@@ -15,8 +16,9 @@ addStrategy(passport)
 app.use(passport.initialize())
 app.use(cors())
 app.use(logger('dev'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json({limit: '50mb'}))
+app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}))
+app.use(express.static('public'))
 app.use('/api', API)
 
 app.listen(8000, () => {

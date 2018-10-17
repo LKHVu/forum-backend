@@ -1,5 +1,21 @@
 import {User} from '../models'
 import {createJWT, getPwHash} from '../helpers'
+import multer from 'multer'
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + '.png')
+    }
+})
+
+const upload = multer({storage, 
+    onFileUploadStart: (file) => {
+        console.log(file.originalname + ' is starting ...')
+    },
+})
 
 exports.create = async (req, res) => {
     const {password, email, name} = req.body
@@ -28,9 +44,9 @@ exports.create = async (req, res) => {
 }
 
 exports.getByName = async (req, res) => {
-    console.log(req.params.name)
+    const {name} = req.params
     try {
-        const user = await User.findOne({name: req.params.name})
+        const user = await User.findOne({name})
         if (!user){
             res.status(500).json({"error": "User not found"})
         } else {
@@ -43,9 +59,9 @@ exports.getByName = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-    console.log(req.params.id)
+    const _id = req.params.id
     try {
-        const user = await User.findOne({_id: req.params.id})
+        const user = await User.findOne({_id})
         if (!user){
             res.status(500).json({"error": "User not found"})
         } else {
@@ -69,13 +85,21 @@ exports.getAll = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
+    const {name} = req.params
     try {
-        const user = await User.deleteOne({name: req.params.name})
+        const user = await User.deleteOne({name})
         res.status(200).json(user)
     } catch(err) {
         console.log(err)
         res.status(500).json({"error": "An error occured", err})
     }
+}
+
+exports.single = upload.single('avatar')
+
+exports.addAvatar = async (req, res) => {
+    console.log(req)
+    return res.status(500).send("abc")
 }
 
 async function isExisted(uniqueKey){
@@ -97,5 +121,6 @@ async function isExisted(uniqueKey){
         return true
     }
 }
+
 
 

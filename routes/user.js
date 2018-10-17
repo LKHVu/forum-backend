@@ -11,6 +11,8 @@ router.post('/', User.create)
 
 router.delete('/:name', User.delete)
 
+router.post('/avatar', User.single, User.addAvatar)
+
 // userRouter.put('/:name')
 
 export default router

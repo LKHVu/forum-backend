@@ -47,3 +47,23 @@ exports.signup = async (req, res) => {
         return res.status(500).json({"error": "An error occured", err})
     }
 }
+
+async function isExisted(uniqueKey){
+    let user
+    try {
+        if (validator.isEmail(uniqueKey)){
+            user = await User.findOne({email: uniqueKey})
+        } else {
+            user = await User.findOne({name: uniqueKey})
+        }
+    } catch(err) {
+        console.log(err)
+    }
+    if (!user){
+        console.log("User not found")
+        return false
+    } else {
+        console.log("User found")
+        return true
+    }
+}
