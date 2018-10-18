@@ -37,6 +37,7 @@ exports.create = async (req, res) => {
         
         const savedComment = await newComment.save()
         currentThread.comments.push(savedComment)
+        currentThread.commentCount = currentThread.comments.length
         currentThread.save()
         res.status(200).json({"success": "You posted a comment", savedComment})
     } catch(err) {

@@ -52,6 +52,7 @@ exports.create = async (req, res) => {
         })
         const savedThread = await newThread.save()
         currentSubforum.threads.push(savedThread)
+        currentSubforum.threadCount = currentSubforum.threads.length
         currentSubforum.save()
         res.status(200).json(savedThread)
     } catch(err) {
@@ -129,7 +130,7 @@ exports.getNewest = async (req, res) => {
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
     const options = {
-        sort: {date: -1},
+        sort: {createdAt: -1},
         lean: true,
         populate: {'path': 'author', select: ['name', '_id']},
         page,
@@ -148,7 +149,7 @@ exports.getPopular = async (req, res) => {
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
     const options = {
-        sort: {createdAt: -1},
+        sort: {views: -1},
         lean: true,
         populate: {'path': 'author', select: ['name', '_id']},
         page,
@@ -163,11 +164,30 @@ exports.getPopular = async (req, res) => {
     }
 }
 
-exports.getHighestRated = async (req, res) => {
+exports.getRating = async (req, res) => {
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
     const options = {
         sort: {score: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
+    }
+}
+
+exports.getReplied = async (req, res) => {
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {commentCount: -1},
         lean: true,
         populate: {'path': 'author', select: ['name', '_id']},
         page,

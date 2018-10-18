@@ -8,6 +8,12 @@ router.get('/', Thread.getAll)
 
 router.get('/newest', Thread.getNewest)
 
+router.get('/popular', Thread.getPopular)
+
+router.get('/rating', Thread.getRating)
+
+router.get('/replied', Thread.getReplied)
+
 router.get('/:id', Thread.getOne)
 
 router.post('/', requireLogin, Thread.create)

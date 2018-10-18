@@ -9,6 +9,7 @@ const ThreadSchema = new mongoose.Schema({
   createdAt:  Date,
   updatedAt:  Date,
   comments:   [{type: Schema.Types.ObjectId, ref: 'Comment'}],
+  commentCounts: {type: Number, default: 0},
   author:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
   upvotes:    [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
   downvotes:  [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],

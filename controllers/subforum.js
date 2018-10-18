@@ -1,4 +1,4 @@
-import {Subforum} from '../models'
+import {Subforum, Thread} from '../models'
 
 exports.create = async (req, res) => {
     const {title, description} = req.body
@@ -55,6 +55,86 @@ exports.delete = async (req, res) => {
     } catch(err) {
         console.log(err)
         res.status(500).json({"error": "An error occured", err})
+    }
+}
+
+exports.getNewest = async (req, res) => {
+    const subforum = req.params.id
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {createdAt: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({subforum}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
+    }
+}
+
+exports.getPopular = async (req, res) => {
+    const subforum = req.params.id
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {views: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({subforum}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
+    }
+}
+
+exports.getRating = async (req, res) => {
+    const subforum = req.params.id
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {score: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({subforum}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
+    }
+}
+
+exports.getReplied = async (req, res) => {
+    const subforum = req.params.id
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    const options = {
+        sort: {commentCounts: -1},
+        lean: true,
+        populate: {'path': 'author', select: ['name', '_id']},
+        page,
+        limit
+    }
+    try {
+    const threads = await Thread.paginate({subforum}, options)
+    res.status(200).send(threads)
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "An error occurred", err})
     }
 }
 
