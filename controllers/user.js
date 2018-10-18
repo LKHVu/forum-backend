@@ -59,9 +59,9 @@ exports.getByName = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-    const _id = req.params.id
+    const id = req.params.id
     try {
-        const user = await User.findOne({_id})
+        const user = await User.findById(id)
         if (!user){
             res.status(500).json({"error": "User not found"})
         } else {
@@ -95,11 +95,46 @@ exports.delete = async (req, res) => {
     }
 }
 
-exports.single = upload.single('avatar')
+// exports.single = upload.single('avatar')
 
-exports.addAvatar = async (req, res) => {
-    console.log(req)
-    return res.status(500).send("abc")
+// exports.addAvatar = async (req, res) => {
+//     console.log(req)
+//     return res.status(500).send("abc")
+// }
+
+exports.changeEmail = async (req, res) => {
+    const {name} = req.user
+    const {email} = req.body
+    if (!email){
+        return res.status(500).json({"error": "Password not found"})
+    }
+    try {
+        const user = await User.findOne({name})
+        user.email = email
+        const savedUser = await user.save()
+        res.status(200).json({"success": "Email changed", email: savedUser.email})
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "an error occured", err})
+    }
+}
+
+exports.changePassword = async (req, res) => {
+    const {name} = req.user
+    const {password} = req.body
+    if (!password){
+        return res.status(500).json({"error": "Password not found"})
+    }
+    const hashedPw = getPwHash(password)
+    try {
+        const user = await User.findOne({})
+        user.password = hashedPw
+        user.save()
+        res.status(200).json({"success": "Password changed"})
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({"error": "an error occured", err})
+    }
 }
 
 async function isExisted(uniqueKey){

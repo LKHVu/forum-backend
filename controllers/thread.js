@@ -125,26 +125,6 @@ exports.unvote = async (req, res) => {
     }
 }
 
-exports.getNewestCreated = async (req, res) => {
-    try {
-        const thread = await Thread.findOne({}, {}, {sort: {createdAt: -1}}).populate('comments').lean()
-        res.status(200).json(thread)
-    } catch(err) {
-        console.log(err)
-        res.status(500).json({"error": "An error occured", err})
-    }
-}
-
-exports.getNewestUpdated = async (req, res) => {
-    try {
-        const thread = await Thread.findOne({}, {}, {sort: {updatedAt: -1}}).populate('comments').lean()
-        res.status(200).json(thread)
-    } catch(err) {
-        console.log(err)
-        res.status(500).json({"error": "An error occured", err})
-    }
-}
-
 exports.getNewest = async (req, res) => {
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
@@ -168,7 +148,7 @@ exports.getPopular = async (req, res) => {
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
     const options = {
-        sort: {date: -1},
+        sort: {createdAt: -1},
         lean: true,
         populate: {'path': 'author', select: ['name', '_id']},
         page,
@@ -187,7 +167,7 @@ exports.getHighestRated = async (req, res) => {
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
     const options = {
-        sort: {date: -1},
+        sort: {score: -1},
         lean: true,
         populate: {'path': 'author', select: ['name', '_id']},
         page,

@@ -4,10 +4,11 @@ import Thread from './thread'
 import Comment from './comment'
 import Subforum from './subforum'
 import {Auth} from '../controllers'
+import {requireLogin} from '../helpers'
 
 const API = Router()
 
-API.use('/user', User)
+API.use('/user', requireLogin, User)
 API.use('/thread', Thread)
 API.use('/comment', Comment)
 API.use('/subforum', Subforum)

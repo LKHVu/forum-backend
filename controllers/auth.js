@@ -1,5 +1,6 @@
 import {User} from '../models'
 import {createJWT, getPwHash} from '../helpers'
+import bcrypt from 'bcrypt'
 
 exports.signin = async (req, res) => {
     const {name, password} = req.body
@@ -8,7 +9,7 @@ exports.signin = async (req, res) => {
         if (!user){
             return res.status(500).json({"error": "User not found"})
         }
-        if (password !== user.password){
+        if (!(await bcrypt.compare(password, user.password))){
             return res.status(500).json({"error": "Incorrect password"})
         }
         const data = user._doc

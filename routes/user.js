@@ -1,17 +1,23 @@
 import {Router} from 'express'
 import {User} from '../controllers'
+import {requireLogin, requireAdmin} from '../helpers'
 
 const router = Router()
 
-router.get('/', User.getAll)
+router.get('/', requireAdmin, User.getAll)
 
-router.get('/:name', User.getByName)
+router.get('/:name', requireAdmin, User.getByName)
 
-router.post('/', User.create)
+router.post('/', requireAdmin, User.create)
 
-router.delete('/:name', User.delete)
+router.delete('/:name', requireAdmin, User.delete)
 
-router.post('/avatar', User.single, User.addAvatar)
+// router.post('/avatar', User.single, User.addAvatar)
+
+router.put('/profile/password', User.changePassword)
+
+router.put('/profile/email', User.changeEmail)
+
 
 // userRouter.put('/:name')
 
